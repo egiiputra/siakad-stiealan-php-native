@@ -1,7 +1,12 @@
 {
+  "scripts": {
+    "dev": "npx @tailwindcss/cli -i ./app.css -o ./public/assets/output.css --watch",
+    "build:css": "npx @tailwindcss/cli -i ./app.css -o ./public/output.css --minify"
+  },
   "dependencies": {
     "@tailwindcss/cli": "^4.1.12",
     "daisyui": "^5.0.51",
+    "dbmate": "^2.28.0",
     "tailwindcss": "^4.1.12"
   }
 }
