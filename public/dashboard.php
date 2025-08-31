@@ -13,11 +13,8 @@ $conn = new mysqli(
 );
 
 ob_start();
-
 ?>
-
 <img src="/assets/img/flow_siakad_2802.jpg" alt="flow siakad">
-
 <?php
 $content = ob_get_clean();
 

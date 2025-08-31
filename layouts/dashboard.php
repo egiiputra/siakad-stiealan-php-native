@@ -5,6 +5,7 @@
         header('Location: /');
     }
 
+
 ?>
 <!DOCTYPE html>
 <html data-theme="mytheme">
@@ -14,89 +15,95 @@
     <title>SIAKAD | STIE AL-ANWAR</title>
     <link rel="stylesheet" href="/assets/output.css">
     <style>
-        .collapse-title {
-            width: 100%;
-        }
-        .collapse-content {
-            width: 100%;
+        summary::after {
+            margin-left: auto;
         }
     </style>
 </head>
 <body>
-	<?php
-	//  require_once("../components/header.php");
-	?>
-	<div class="navbar bg-base-100 shadow-sm">
-        <div class="flex-none">
-            <label for="my-drawer-2" class="btn drawer-button lg:hidden">
-                <!-- <button class="btn btn-square btn-ghost"> -->
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block h-5 w-5 stroke-current"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path> </svg>
-                </button>
-            </label>
+	<div class="drawer lg:drawer-open">
+        <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
+        <div class="drawer-content flex flex-col items-center justify-center">
+            <!-- Page content here -->
+            <!-- <label for="my-drawer-2" class="btn btn-primary drawer-button lg:hidden">
+            Open drawer
+            </label> -->
+            <?= $content ?>
         </div>
-		<div class="flex-1">
-			<a class="btn btn-ghost text-xl">
-			<img src="/assets/img/logo-stie.png"/>
-			</a>
-		</div>
-		<div class="flex-none">
-			<div class="dropdown dropdown-end">
-			<div class="btn" tabindex="0" role="button" >
-				<?= $_SESSION['username'] ?>
-				<div class="avatar">
-                    <div class="w-10 rounded-full">
-                        <img
-                        alt="Tailwind CSS Navbar component"
-                        src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+        <div class="drawer-side bg-primary text-primary-content p-2">
+            <label for="my-drawer-2" aria-label="close sidebar" class="drawer-overlay"></label>
+            <img src="/assets/img/logo-stie_dark.png" alt="logo siakad" class="mx-auto"/>
+            <div class="dropdown z-99 w-full mt-5">
+                <div class="btn bg-[#061553] border-none w-full justify-start text-primary-content rounded-full py-8" tabindex="0" role="button" >
+                    <div class="avatar">
+                        <div class="w-10 rounded-full">
+                            <img
+                            alt="Tailwind CSS Navbar component"
+                            src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+                        </div>
                     </div>
-				</div>
-			</div>
-			<ul
-				tabindex="0"
-				class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
-				<li>
-				<a class="justify-between">
-					Profile
-					<span class="badge">New</span>
-				</a>
-				</li>
-				<li><a>Settings</a></li>
-				<li><a>Logout</a></li>
-			</ul>
-			</div>
-		</div>
-	</div>
-    <div class="drawer lg:drawer-open">
-        <ul class="menu p-4 w-80 min-h-full bg-base-200">
-  <li><a class="flex items-center gap-2"><i data-lucide="home" class="w-5 h-5"></i> Dashboard</a></li>
-
-  <li>
-    <details>
-      <summary class="flex items-center gap-2">
-        <i data-lucide="folder" class="w-5 h-5"></i>
-        Projects
-      </summary>
-      <ul>
-        <li><a class="flex items-center gap-2"><i data-lucide="file-text" class="w-4 h-4"></i> Active</a></li>
-        <li><a class="flex items-center gap-2"><i data-lucide="archive" class="w-4 h-4"></i> Archived</a></li>
-      </ul>
-    </details>
-  </li>
-
-  <li>
-    <details>
-      <summary class="flex items-center gap-2">
-        <i data-lucide="settings" class="w-5 h-5"></i>
-        Settings
-      </summary>
-      <ul>
-        <li><a class="flex items-center gap-2"><i data-lucide="user" class="w-4 h-4"></i> Profile</a></li>
-        <li><a class="flex items-center gap-2"><i data-lucide="shield" class="w-4 h-4"></i> Security</a></li>
-      </ul>
-    </details>
-  </li>
-</ul>
-
+                    <div class="flex flex-col items-start">
+                        <b><?= $_SESSION['username'] ?></b>
+                        <span><?= $_SESSION['level'] ?></span>
+                    </div>
+                </div>
+                <ul
+                    tabindex="0"
+                    class="menu menu-sm dropdown-content text-base-content bg-base-100 rounded-box z-1 mt-3 w-52  shadow">
+                    <li>
+                    <a class="justify-between">
+                        Profile
+                        <span class="badge">New</span>
+                    </a>
+                    </li>
+                    <li><a>Settings</a></li>
+                    <li><a>Logout</a></li>
+                </ul>
+            </div>
+            <ul class="menu w-80 p-4">
+                <li>
+                    <a href="/dashboard.php">Dashboard</a>
+                    <!-- <details>
+                        <summary class="flex items-center justify-between">
+                            <span class="flex items-center gap-2">
+                            <i data-lucide="folder" class="w-5 h-5"></i>
+                                Dashboard
+                            </span>
+                            <i data-lucide="chevron-down" class="w-4 h-4 transition-transform"></i>
+                        </summary>
+                    </details> -->
+                </li>
+                <li>
+                    <details>
+                        <summary class="flex items-center justify-between">
+                            <span class="flex items-center gap-2">
+                            <!-- <i data-lucide="folder" class="w-5 h-5"></i> -->
+                                Settings
+                            </span>
+                            <!-- <i data-lucide="chevron-down" class="w-4 h-4 transition-transform"></i> -->
+                        </summary>
+                        <ul>
+                            <li>
+                                <a href="/settings/semester.php" class="flex items-center gap-2"><i data-lucide="file-text" class="w-4 h-4"></i>Semester</a></li>
+                            <li>
+                            <details>
+                                <summary class="flex items-center justify-between">
+                                <span class="flex items-center gap-2">
+                                    <i data-lucide="archive" class="w-5 h-5"></i>
+                                    Archived
+                                </span>
+                                <i data-lucide="chevron-down" class="w-4 h-4 transition-transform"></i>
+                                </summary>
+                                <ul>
+                                <li><a href="/2023.php">2023</a></li>
+                                <li><a href="/2024.php">2024</a></li>
+                                </ul>
+                            </details>
+                            </li>
+                        </ul>
+                    </details>
+                </li>
+            </ul>
         </div>
     </div>
 
@@ -106,10 +113,20 @@
             const navLinks = document.querySelectorAll(".drawer-side ul li a");
 
             navLinks.forEach(link => {
-            if (link.getAttribute("href") === currentPath) {
-                link.parentElement.classList.add("active"); // add to <li>
-                // or link.classList.add("active"); // add to <a> if you prefer
-            }
+                if (link.getAttribute("href") === currentPath) {
+                    console.log(link)
+                    link.classList.add('bg-[#061553]')
+                    // link.classList.add('text-base-content'); // add to <li>
+                    // or link.classList.add("active"); // add to <a> if you prefer
+                    let parent = link.closest("details");
+                    while (parent) {
+                        parent.setAttribute("open", "");
+                        // rotate the chevron icon if exists
+                        // const icon = parent.querySelector(":scope > summary [data-lucide='chevron-down']");
+                        // if (icon) icon.classList.add("rotate-180");
+                        parent = parent.parentElement.closest("details");
+                    }
+                }
             });
         });
     </script>
