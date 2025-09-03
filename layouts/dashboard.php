@@ -128,8 +128,6 @@
             const currentPath = window.location.pathname; // e.g. "/about.php"
             const navLinks = document.querySelectorAll(".drawer-side ul li a");
 
-            console.log(navLinks)
-
             let breadcrumbsInner = ""
 
             navLinks.forEach(link => {
@@ -156,6 +154,8 @@
             breadcrumbs.innerHTML += breadcrumbsInner;
         });
     </script>
+
+    <?= $script ?? '' ?>
 
 </body>
 </html>
