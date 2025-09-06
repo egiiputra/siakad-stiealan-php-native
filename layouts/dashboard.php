@@ -99,7 +99,7 @@
                         </summary>
                         <ul>
                             <li>
-                                <a href="/settings/semester.php" class="flex items-center gap-2"><i data-lucide="file-text" class="w-4 h-4"></i>Semester</a></li>
+                                <a href="/settings/semester.php" class="flex items-center gap-2">Semester</a></li>
                             <li>
                             <details>
                                 <summary class="flex items-center justify-between">
