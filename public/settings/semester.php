@@ -40,7 +40,7 @@ ob_start();
   <div class="modal-box w-6/12 max-w-5xl">
     <h3 class="text-lg font-bold">Form tambah semester</h3>
     
-    <form action="post" id="form-add">
+    <form hx-post="/api/semester.php" id="form-add">
         <fieldset class="fieldset">
             <legend class="fieldset-legend">Kode</legend>
             <input name="kode" type="text" value="<?= $inputKode ?>" class="input w-full" readonly>
@@ -48,6 +48,31 @@ ob_start();
         <fieldset class="fieldset">
             <legend class="fieldset-legend">Nama</legend>
             <input name="nama" type="text" value="<?= $inputNama ?>" class="input w-full" readonly>
+        </fieldset>
+        <fieldset class="fieldset">
+            <legend class="fieldset-legend">SPP KRS</legend>
+            <div class="flex gap-2">
+                <select name="tahun-spp-krs" id="" class="input">
+                    <?php 
+                    $currYear = intval(date("Y"));
+                    for ($i = ($currYear - 5); $i <= ($currYear + 5); $i++) {
+                    ?>
+                    <option value="<?= $i ?>" <?= ($i == $currYear) ? 'selected':'' ?>><?= $i?></option>
+                    <?php
+                    }
+                    ?>
+                </select>
+                <select name="bulan-spp-krs" id="" class="input">
+                    <option value="">-- Pilih bulan SPP UTS</option>
+                    <?php 
+                    for ($i = 1; $i <= 12; $i++) {
+                    ?>
+                    <option value="<?= $i ?>"><?= $months[$i] ?></option>
+                    <?php
+                    }
+                    ?>
+                </select>
+            </div>
         </fieldset>
         <fieldset class="fieldset">
             <legend class="fieldset-legend">Bulan UTS</legend>
@@ -103,7 +128,7 @@ ob_start();
         <fieldset class="fieldset">
             <legend class="fieldset-legend">SPP UAS</legend>
             <div class="flex gap-2">
-                <select name="tahun-spp-uts" id="" class="input">
+                <select name="tahun-spp-uas" id="" class="input">
                     <?php 
                     for ($i = $thn; $i <= ($currYear + 5); $i++) {
                     ?>
@@ -112,8 +137,8 @@ ob_start();
                     }
                     ?>
                 </select>
-                <select name="bulan-spp-uts" id="" class="input">
-                    <option value="">-- Pilih bulan SPP UTS</option>
+                <select name="bulan-spp-uas" id="" class="input">
+                    <option value="">-- Pilih bulan SPP UAS</option>
                     <?php 
                     for ($i = 1; $i <= 12; $i++) {
                     ?>
@@ -138,7 +163,7 @@ ob_start();
     <thead>
         <tr>
             <th>Kode</th>
-            <th></th>
+            <th>Aktif</th>
             <th></th>
             <th>Nama</th>
             <th>UTS</th>
@@ -155,7 +180,15 @@ ob_start();
         ?>
         <tr>
             <td><?= $row['smt'] ?></td>
-            <td></td>
+            <td>
+                <input
+                    type="radio"
+                    name="smt-aktif"
+                    class="radio radio-sm"
+                    value="<?= $row['smt'] ?>"
+                    <?= $row['status'] ? 'checked':'' ?>
+                />
+            </td>
             <td></td>
             <td><?= $row['nama'] ?></td>
             <td><?= $row['blnuts'] ?></td>
@@ -192,30 +225,90 @@ ob_start();
     <button class="join-item btn border border-neutral-300">4</button> -->
     <?php endfor; ?>
 </div>
-
 <?php
 $content = ob_get_clean();
 
 ob_start();
 ?>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+    let prevChecked = document.querySelector('input[name="status"]:checked');
+
+    const radioSmt = document.querySelectorAll('input[name="smt-aktif"]');
+
+    radioSmt.forEach(el => {
+        el.addEventListener('click', async (e) => {
+            e.preventDefault(); // prevent immediate check
+
+            const target = e.target;
+
+            Swal.fire({
+                title: "Apakah yakin mengubah status semester?",
+                text: `Mengubah semester aktif ke "${target.value}"?`,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Ya",
+                cancelButtonText: "Tidak",
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    try {
+                        // Example API call
+                        fetch("/api/semester.php", {
+                            method: "PATCH",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({ kode: target.value }),
+                        })
+                            .then(response => {
+                                if (response.status == 400) {
+                                    Swal.fire("Gagal!", "Mengubah semester aktif gagal", "error");
+                                } else {
+                                    target.checked = true;
+                                    prevChecked = target;
+                                    Swal.fire("Berhasil!", "Berhasil mengubah semester aktif", "success");
+                                }
+                            })
+                    } catch (err) {
+                        Swal.fire("Error!", "Failed to update status", "error");
+                        if (prevChecked) prevChecked.checked = true;
+                    }
+                } else {
+                    // revert to previous selection
+                    if (prevChecked) prevChecked.checked = true;
+                }
+            });
+        });
+    })
     const formAdd = document.getElementById('form-add');
 
     formAdd.addEventListener('submit', function (event) {
         event.preventDefault();
         const data = new FormData(this);
 
-        console.log(data);
-
         fetch('/api/semester.php', {
             method: 'POST',
             body: data
         })
-            .then(response => console.log(response.body))
-            .then(body => console.log(body))
+            .then(response => {
+                my_modal_1.close()
+                if (response.status == 400) {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Data gagal ditambahkan",
+                        text: "Data semester sudah ada",
+                    });
+                } else if (response.status == 201) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Data berhasil ditambahkan",
+                    });
+                }
+                setTimeout(() => {
+                    window.location.href = '/settings/semester.php'
+                }, 2000);
+            })
     });
-
-
 </script>
 <?php
 $script = ob_get_clean();

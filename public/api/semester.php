@@ -1,5 +1,6 @@
 <?php
 
+// TODO: Authorize (Ensure that user have permission)
 require_once('../../vendor/autoload.php');
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__, '../../.env');
@@ -12,11 +13,14 @@ $conn = new mysqli(
     $_ENV['DB_NAME']
 );
 
+header('Content-Type: application/json');
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $bulanSppKrs = (intval($_POST['tahun-spp-krs']) * 100) + intval($_POST['bulan-spp-krs']);
     $bulanSppUts = (intval($_POST['tahun-spp-uts']) * 100) + intval($_POST['bulan-spp-uts']);
     $bulanSppUas = (intval($_POST['tahun-spp-uas']) * 100) + intval($_POST['bulan-spp-uas']);
-    $res = $conn->query("INSERT INTO ms_smt VALUES (" 
+
+    $conn->query("INSERT INTO ms_smt VALUES (" 
         . $_POST['kode'] . ","
         . "'" . $_POST['nama'] . "',"
         . "0,"
@@ -41,5 +45,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         'message' => 'insert data semester succeed'
     ]);
     exit();
+}
+
+if ($_SERVER['REQUEST_METHOD'] == 'PATCH') {
+    $input = trim(file_get_contents("php://input"));
+    $body = json_decode($input, true);
+
+    $kode = $body['kode'];
+
+    $conn->begin_transaction();
+    
+    $conn->query("UPDATE ms_smt SET status=0 WHERE status=1");
+
+    $conn->query("UPDATE ms_smt SET status=1 WHERE smt=$kode");
+
+    if ($conn->affected_rows == 0) {
+        $conn->rollback();
+        http_response_code(400);
+        echo json_encode([
+            'message' => 'Active semester failed'
+        ]);
+        exit();
+    }
+    $conn->commit();
+
+    http_response_code(201);
+    echo json_encode([
+        'message' => 'Active semester succeed'
+    ]);
+    exit();
+
+
+
+    
 }
 ?>
