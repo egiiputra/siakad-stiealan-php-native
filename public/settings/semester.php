@@ -164,7 +164,7 @@ ob_start();
         <tr>
             <th>Kode</th>
             <th>Aktif</th>
-            <th></th>
+            <th>KRS</th>
             <th>Nama</th>
             <th>UTS</th>
             <th>UAS</th>
@@ -189,7 +189,22 @@ ob_start();
                     <?= $row['status'] ? 'checked':'' ?>
                 />
             </td>
-            <td></td>
+            <td>
+                <?php
+                if ($row['status'] == 1):
+                ?>
+                <input
+                    name="krs-aktif"
+                    type="checkbox"
+                    class="checkbox"
+                    <?= ($row['statkrs'] == 1) ? 'checked':'' ?>
+                    onclick="toggleKrs(this)"
+                    value="<?= $row['smt'] ?>"
+                />
+                <?php
+                endif;
+                ?>
+            </td>
             <td><?= $row['nama'] ?></td>
             <td><?= $row['blnuts'] ?></td>
             <td><?= $row['blnuas'] ?></td>
@@ -232,11 +247,17 @@ ob_start();
 ?>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    let prevChecked = document.querySelector('input[name="status"]:checked');
+    let prevChecked;
+
+    let cellCheckboxSmt = document.querySelectorAll('table tbody tr td:nth-child(3)')
 
     const radioSmt = document.querySelectorAll('input[name="smt-aktif"]');
 
-    radioSmt.forEach(el => {
+    radioSmt.forEach((el, i) => {
+        if (el.checked) {
+            console.log(i)
+            prevChecked = [el, i]
+        }
         el.addEventListener('click', async (e) => {
             e.preventDefault(); // prevent immediate check
 
@@ -250,36 +271,93 @@ ob_start();
                 confirmButtonText: "Ya",
                 cancelButtonText: "Tidak",
             }).then(async (result) => {
-                if (result.isConfirmed) {
-                    try {
-                        // Example API call
-                        fetch("/api/semester.php", {
-                            method: "PATCH",
-                            headers: {
-                                "Content-Type": "application/json",
-                            },
-                            body: JSON.stringify({ kode: target.value }),
+                if (!result.isConfirmed) {
+                    prevChecked.checked = true
+                    return
+                }
+
+                try {
+                    // Example API call
+                    fetch("/api/semester.php", {
+                        method: "PATCH",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({ kode: target.value }),
+                    })
+                        .then(response => {
+                            if (response.status == 400) {
+                                Swal.fire("Gagal!", "Mengubah semester aktif gagal", "error");
+                            } else {
+                                target.checked = true;
+                                cellCheckboxSmt[prevChecked[1]].innerHTML = ''
+                                prevChecked = [target, i];
+                                cellCheckboxSmt[i].innerHTML = `<input
+                                    name="krs-aktif"
+                                    type="checkbox"
+                                    class="checkbox"
+                                    onclick="toggleKrs(this)"
+                                    value="${target.value}"
+                                />`
+
+                                Swal.fire("Berhasil!", "Berhasil mengubah semester aktif", "success");
+                            }
                         })
-                            .then(response => {
-                                if (response.status == 400) {
-                                    Swal.fire("Gagal!", "Mengubah semester aktif gagal", "error");
-                                } else {
-                                    target.checked = true;
-                                    prevChecked = target;
-                                    Swal.fire("Berhasil!", "Berhasil mengubah semester aktif", "success");
-                                }
-                            })
-                    } catch (err) {
-                        Swal.fire("Error!", "Failed to update status", "error");
-                        if (prevChecked) prevChecked.checked = true;
-                    }
-                } else {
-                    // revert to previous selection
+                } catch (err) {
+                    Swal.fire("Error!", "Failed to update status", "error");
                     if (prevChecked) prevChecked.checked = true;
                 }
             });
         });
     })
+
+    function toggleKrs(checkBox) {
+        console.log(checkBox)
+        console.log(checkBox.value)
+        Swal.fire({
+            title: "Apakah yakin mengubah status krs?",
+            text: `Mengubah status krs semester "${checkBox.value}"?`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Ya",
+            cancelButtonText: "Tidak",
+        }).then(async (result) => {
+            if (!result.isConfirmed) {
+                checkBox.checked = false
+                return
+            }
+            console.log(JSON.stringify({ 
+                        kode: checkBox.value,
+                        statKrs: (checkBox.checked ? 1:0)
+                    }))
+
+            try {
+                // Example API call
+                console.log(checkBox.checked)
+                fetch("/api/semester.php", {
+                    method: "PATCH",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ 
+                        kode: checkBox.value,
+                        statKrs: (checkBox.checked ? 1:0)
+                    }),
+                })
+                    .then(response => {
+                        if (response.status == 400) {
+                            Swal.fire("Gagal!", "Mengubah semester aktif gagal", "error");
+                        } else {
+                            Swal.fire("Berhasil!", "Berhasil mengubah semester aktif", "success");
+                        }
+                    })
+            } catch (err) {
+                Swal.fire("Error!", "Failed to update status", "error");
+                if (prevChecked) prevChecked.checked = true;
+            }
+        });
+    }
+
     const formAdd = document.getElementById('form-add');
 
     formAdd.addEventListener('submit', function (event) {
