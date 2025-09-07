@@ -104,14 +104,12 @@
                             <details>
                                 <summary class="flex items-center justify-between">
                                 <span class="flex items-center gap-2">
-                                    <i data-lucide="archive" class="w-5 h-5"></i>
-                                    Archived
+                                    Kampus
                                 </span>
-                                <i data-lucide="chevron-down" class="w-4 h-4 transition-transform"></i>
                                 </summary>
                                 <ul>
-                                <li><a href="/2023.php">2023</a></li>
-                                <li><a href="/2024.php">2024</a></li>
+                                    <li><a href="/settings/fakultas.php">Fakultas</a></li>
+                                    <li><a href="/settings/prodi.php">Prodi</a></li>
                                 </ul>
                             </details>
                             </li>
