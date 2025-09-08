@@ -19,27 +19,20 @@
         summary::after {
             margin-left: auto;
         }
+        details ul::before {
+            background-color: white;
+        }
     </style>
+    <?= $head ?? '' ?>
 </head>
 <body class="bg-base-300">
 	<div class="drawer lg:drawer-open">
         <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
         <div class="drawer-content flex flex-col items-center justify-center p-5">
-            <!-- Page content here -->
-            <!-- <label for="my-drawer-2" class="btn btn-primary drawer-button lg:hidden">
-            Open drawer
-            </label> -->
             <div class="bg-base-100 size-full p-5 rounded-md">
                 <div class="breadcrumbs text-sm">
                     <ul>
                         <li>Home</li>
-                        <?php
-                        // $paths = preg_split("/[.\/]+/", $_SERVER['SCRIPT_NAME']);
-                        // for ($i = 1; $i < (count($paths) - 1); $i++):
-                        ?>
-                        <?php
-                        // endfor;
-                        ?>
                     </ul>
                 </div>
                 <?= $content ?>
@@ -77,29 +70,18 @@
             </div>
             <ul class="menu w-80 p-4">
                 <li>
-                    <a href="/dashboard.php">Dashboard</a>
-                    <!-- <details>
-                        <summary class="flex items-center justify-between">
-                            <span class="flex items-center gap-2">
-                            <i data-lucide="folder" class="w-5 h-5"></i>
-                                Dashboard
-                            </span>
-                            <i data-lucide="chevron-down" class="w-4 h-4 transition-transform"></i>
-                        </summary>
-                    </details> -->
+                    <a href="/dashboard">Dashboard</a>
                 </li>
                 <li>
                     <details>
                         <summary class="flex items-center justify-between">
                             <span class="flex items-center gap-2">
-                            <!-- <i data-lucide="folder" class="w-5 h-5"></i> -->
                                 Settings
                             </span>
-                            <!-- <i data-lucide="chevron-down" class="w-4 h-4 transition-transform"></i> -->
                         </summary>
                         <ul>
                             <li>
-                                <a href="/settings/semester.php" class="flex items-center gap-2">Semester</a></li>
+                                <a href="/settings/semester" class="flex items-center gap-2">Semester</a></li>
                             <li>
                             <details>
                                 <summary class="flex items-center justify-between">
@@ -108,8 +90,8 @@
                                 </span>
                                 </summary>
                                 <ul>
-                                    <li><a href="/settings/fakultas.php">Fakultas</a></li>
-                                    <li><a href="/settings/prodi.php">Prodi</a></li>
+                                    <li><a href="/settings/fakultas">Fakultas</a></li>
+                                    <li><a href="/settings/prodi">Prodi</a></li>
                                 </ul>
                             </details>
                             </li>
@@ -133,27 +115,19 @@
                     link.classList.add('bg-[#061553]')
 
                     breadcrumbsInner = `<li>${link.innerHTML}</li>` + breadcrumbsInner
-                    // link.classList.add('text-base-content'); // add to <li>
-                    // or link.classList.add("active"); // add to <a> if you prefer
                     let parent = link.closest("details");
                     while (parent) {
                         parent.setAttribute("open", "");
 
                         breadcrumbsInner = `<li>${parent.querySelector('summary > span').innerHTML}</li>` + breadcrumbsInner
-                        // rotate the chevron icon if exists
-                        // const icon = parent.querySelector(":scope > summary [data-lucide='chevron-down']");
-                        // if (icon) icon.classList.add("rotate-180");
                         parent = parent.parentElement.closest("details");
                     }
                 }
             });
 
-            console.log(breadcrumbsInner)
             breadcrumbs.innerHTML += breadcrumbsInner;
         });
     </script>
-
     <?= $script ?? '' ?>
-
 </body>
 </html>
