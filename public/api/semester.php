@@ -51,11 +51,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'PATCH') {
     $input = trim(file_get_contents("php://input"));
     $body = json_decode($input, true);
 
+    // Handle toggle krs
+    if (isset($body['statKrs'])) {
+        $conn->query("UPDATE ms_smt SET statkrs=" . $body['statKrs'] . " WHERE smt=". $body['kode']);
+
+        if ($conn->affected_rows == 0) {
+            http_response_code(400);
+            echo json_encode([
+                'message' => 'Toggle KRS failed'
+            ]);
+            exit();
+        }
+
+        http_response_code(201);
+        echo json_encode([
+            'message' => 'Toggle semester succeed'
+        ]);
+        exit();
+    }
+
     $kode = $body['kode'];
 
     $conn->begin_transaction();
-    
-    $conn->query("UPDATE ms_smt SET status=0 WHERE status=1");
+
+    $conn->query("UPDATE ms_smt SET status=0, statkrs=0 WHERE status=1");
 
     $conn->query("UPDATE ms_smt SET status=1 WHERE smt=$kode");
 
@@ -75,8 +94,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'PATCH') {
     ]);
     exit();
 
-
-
-    
 }
 ?>

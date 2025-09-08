@@ -278,7 +278,7 @@ ob_start();
 
                 try {
                     // Example API call
-                    fetch("/api/semester.php", {
+                    fetch("/api/semester", {
                         method: "PATCH",
                         headers: {
                             "Content-Type": "application/json",
@@ -334,7 +334,7 @@ ob_start();
             try {
                 // Example API call
                 console.log(checkBox.checked)
-                fetch("/api/semester.php", {
+                fetch("/api/semester", {
                     method: "PATCH",
                     headers: {
                         "Content-Type": "application/json",
@@ -364,7 +364,7 @@ ob_start();
         event.preventDefault();
         const data = new FormData(this);
 
-        fetch('/api/semester.php', {
+        fetch('/api/semester', {
             method: 'POST',
             body: data
         })
