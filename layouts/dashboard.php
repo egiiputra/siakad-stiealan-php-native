@@ -8,7 +8,7 @@
 
 ?>
 <!DOCTYPE html>
-<html data-theme="mytheme">
+<html data-theme="mytheme" lang="id">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,6 +21,9 @@
         }
         details ul::before {
             background-color: white;
+        }
+        .drawer-content svg {
+            fill: var(--color-base-content);
         }
     </style>
     <?= $head ?? '' ?>
@@ -68,9 +71,39 @@
                     <li><a>Logout</a></li>
                 </ul>
             </div>
+            <!-- TODO: Add SMT aktif -->
             <ul class="menu w-80 p-4">
                 <li>
-                    <a href="/dashboard">Dashboard</a>
+                    <a href="/dashboard">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M520-600v-240h320v240H520ZM120-440v-400h320v400H120Zm400 320v-400h320v400H520Zm-400 0v-240h320v240H120Zm80-400h160v-240H200v240Zm400 320h160v-240H600v240Zm0-480h160v-80H600v80ZM200-200h160v-80H200v80Zm160-320Zm240-160Zm0 240ZM360-280Z"/></svg>    
+                        Dashboard
+                    </a>
+                </li>
+                <li>
+                    <details>
+                        <summary class="flex items-center justify-between">
+                            <span class="flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M627-520h133v-160H627v160Zm-214 0h133v-160H413v160Zm-213 0h133v-160H200v160Zm0 240h133v-160H200v160Zm213 0h133v-160H413v160Zm214 0h133v-160H627v160Zm-507 0v-400q0-33 23.5-56.5T200-760h560q33 0 56.5 23.5T840-680v400q0 33-23.5 56.5T760-200H200q-33 0-56.5-23.5T120-280Z"/></svg>Master
+                            </span>
+                        </summary>
+                        <ul>
+                            <li>
+                                <a href="/master/mata_kuliah" class="flex items-center gap-2">Mata Kuliah</a>
+                            </li>
+                            <li>
+                                <a href="/master/mahasiwa" class="flex items-center gap-2">Mahasiswa</a>
+                            </li>
+                            <li>
+                                <a href="/master/mahasiswa_tambahan" class="flex items-center gap-2">Mahasiswa Tambahan</a>
+                            </li>
+                            <li>
+                                <a href="/master/dosen" class="flex items-center gap-2">Dosen</a>
+                            </li>
+                            <li>
+                                <a href="/master/tenaga_kependidikan" class="flex items-center gap-2">Tenaga Kependidikan</a>
+                            </li>
+                        </ul>
+                    </details>
                 </li>
                 <li>
                     <details>
