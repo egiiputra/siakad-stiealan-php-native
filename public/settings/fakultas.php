@@ -1,5 +1,6 @@
 <?php
 
+// TODO: make sure user have permission
 require_once('../../vendor/autoload.php');
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__, '../../.env');
@@ -12,7 +13,6 @@ $conn = new mysqli(
     $_ENV['DB_NAME']
 );
 
-$page = $_GET['page'] ?? 1;
 
 $count = $conn->query("SELECT COUNT(*) FROM ms_fakultas")->fetch_array()[0];
 
@@ -107,22 +107,6 @@ ob_start();
     </tbody>
 </table>
 
-<div class="join">
-    <?php
-    $pageCount = ceil($count / 5);
-    for ($i = 1; $i <= $pageCount; $i++):
-        if ($i == $page):
-    ?>
-    <a href="/settings/semester.php?page=<?= $i ?>" class="join-item btn border border-neutral-300 btn-active"><?= $i ?></a>
-    <?php
-        else:
-    ?>
-    <a href="/settings/semester.php?page=<?= $i ?>" class="join-item btn border border-neutral-300"><?= $i ?></a>
-    <?php
-        endif;
-    ?>
-    <?php endfor; ?>
-</div>
 <?php
 $content = ob_get_clean();
 
