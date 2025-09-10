@@ -1,11 +1,24 @@
+ErrorDocument 404 /404.html
 # Enable RewriteEngine
-RewriteEngine On
+#RewriteEngine On
 
 # Make sure it's not a real directory or file
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_FILENAME} !-f
+#RewriteCond %{REQUEST_FILENAME} !-d
+#RewriteCond %{REQUEST_FILENAME} !-f
 
 # If URL matches /something, try to serve /something.php
-RewriteRule ^(.+)$ $1.php [L]
+#RewriteRule ^(.+)$ $1.php [L]
+
 
 ErrorDocument 404 /404.html
+
+Options -Indexes -MultiViews
+RewriteEngine on
+
+RewriteCond %{THE_REQUEST} \.php [NC]
+RewriteRule ^(?!404\.php)$ - [L,NC,R=404]
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^(.+)$ ./$1.php [L]
+
